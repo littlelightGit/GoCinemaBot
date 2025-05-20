@@ -1,12 +1,14 @@
 from aiogram import Bot, Dispatcher
-import asyncio
+import asyncio, os
+from dotenv import load_dotenv
+
+load_dotenv(dotenv_path='config.env')
+
+bot = Bot(os.getenv("TOKEN"))
+dp = Dispatcher()
 
 
 async def main():
-    bot = Bot('TOKEN')
-    dp = Dispatcher()
-
-    await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
 
