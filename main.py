@@ -5,7 +5,7 @@ from handlers import router
 from logger import logger
 
 load_dotenv(dotenv_path='config.env')
-logger.info('fff')
+logger.info('LOGGING ON')
 bot = Bot(os.getenv("TOKEN"))
 dp = Dispatcher()
 
