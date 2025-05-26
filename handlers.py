@@ -1,4 +1,4 @@
-
+from datetime import datetime, date
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from keyboards import welcome
@@ -11,9 +11,11 @@ router = Router()
 CITYLIST = ["Санкт-Петербург", "Москва", "Новосибирск", "Екатеринбург", "Нижний Новгород", "Казань",
             "Выборг", "Самара", "Краснодар", "Сочи", "Уфа", "Красноярск"]
 
+
 class Form(StatesGroup):
     city = State()
     date = State()
+
 
 @router.message(CommandStart())
 async def cmd_start(message: Message):
@@ -22,6 +24,7 @@ async def cmd_start(message: Message):
         f'\nЯ помогу тебе найти самый удобный киносеанс,'
         f'\nнажми на кнопку "🔍 Поиск" и скорее на фильм!',
         reply_markup=welcome())
+
 
 @router.callback_query(F.data == "search")
 async def sh_cb(callback: CallbackQuery, state: FSMContext) -> None:
@@ -32,18 +35,29 @@ async def sh_cb(callback: CallbackQuery, state: FSMContext) -> None:
     await state.set_state(Form.city)
     await callback.answer()
 
+
 @router.message(Form.city)
-async def process_city(message: Message, state: FSMContext) -> None:
-    await state.update_data(city=message.text)
+async def process_city(message: Message, state: FSMContext):
     user_city = message.text.strip()
 
     if user_city not in CITYLIST:
-        await message.answer('Введите город из списка доступных')
+        await message.answer('❌ Введите город из списка доступных')
         return
+    await state.update_data(citys=user_city)
     await state.set_state(Form.date)
+    await message.answer('✅ Отлично! Теперь введите дату, когда хотите пойти в кино')
 
 
-
-
+@router.message(Form.date)
+async def process_date(message: Message, state: FSMContext):
+    user_date = message.text.strip()
+    try:
+        pars_date = datetime.strptime(user_date, "%d.%m.%y")
+        if pars_date.date() < date.today():
+            await message.answer("❌ Мы, пока что, не можем вернуться в прошлое 🥲")
+        else:
+            await message.answer('✅ Отлично! Сейчас покажем результаты поиска')
+    except ValueError:
+        await message.answer("❌ Введите дату в указанном формате дд.мм.гг")
 
 
