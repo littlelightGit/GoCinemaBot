@@ -6,5 +6,8 @@ requires-python = ">=3.13"
 dependencies = [
     "aiogram",
     "asyncio>=3.4.3",
+    "dotenv==0.9.9",
+    "emoji==2.14.1",
+    "logging==0.4.9.6",
     "playwright==1.52.0",
 ]
