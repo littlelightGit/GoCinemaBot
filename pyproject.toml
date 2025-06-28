@@ -8,6 +8,6 @@ dependencies = [
     "asyncio>=3.4.3",
     "dotenv==0.9.9",
     "emoji==2.14.1",
+    "httpx==0.28.1",
     "logging==0.4.9.6",
-    "playwright==1.52.0",
 ]
